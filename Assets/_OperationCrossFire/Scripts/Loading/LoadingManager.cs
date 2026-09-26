@@ -9,8 +9,10 @@ public class LoadingManager : MonoBehaviour
 {
     [SerializeField] Image _loaderFill;
     [SerializeField] string _gameSceneName = "Game";
+    [SerializeField] float _minimumDisplaySeconds = 3f;
 
     bool _loadFailed;
+    float _displayStartedAt;
 
     void Awake()
     {
@@ -29,6 +31,7 @@ public class LoadingManager : MonoBehaviour
 
     void Start()
     {
+        _displayStartedAt = Time.unscaledTime;
         StartCoroutine(LoadGameScene());
     }
 
@@ -57,14 +60,31 @@ public class LoadingManager : MonoBehaviour
 
         operation.allowSceneActivation = false;
 
-        while (operation.progress < 0.9f)
+        float minimumSeconds = Mathf.Max(0f, _minimumDisplaySeconds);
+        while (!IsReadyToActivate(operation, minimumSeconds))
         {
-            SetFill(Mathf.Clamp01(operation.progress / 0.9f) * 0.9f);
+            SetFill(CurrentDisplayFill(operation, minimumSeconds));
             yield return null;
         }
 
-        SetFill(0.9f);
+        SetFill(1f);
         operation.allowSceneActivation = true;
+    }
+
+    bool IsReadyToActivate(AsyncOperation operation, float minimumSeconds)
+    {
+        bool loadReady = operation.progress >= 0.9f;
+        bool minimumElapsed = Time.unscaledTime - _displayStartedAt >= minimumSeconds;
+        return loadReady && minimumElapsed;
+    }
+
+    float CurrentDisplayFill(AsyncOperation operation, float minimumSeconds)
+    {
+        float loadT = Mathf.Clamp01(operation.progress / 0.9f);
+        float timeT = minimumSeconds <= 0f
+            ? 1f
+            : Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((Time.unscaledTime - _displayStartedAt) / minimumSeconds));
+        return Mathf.Min(loadT, timeT) * 0.9f;
     }
 
     bool IsConfiguredGameSceneInBuildProfile()
