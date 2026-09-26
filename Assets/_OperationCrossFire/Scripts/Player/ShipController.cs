@@ -19,6 +19,8 @@ public class ShipController : MonoBehaviour
     int _horizontalInput;
     bool _configurationValid;
 
+    public int HorizontalInput => _horizontalInput;
+
     void Awake()
     {
         _configurationValid = ValidateConfiguration(logErrors: true);

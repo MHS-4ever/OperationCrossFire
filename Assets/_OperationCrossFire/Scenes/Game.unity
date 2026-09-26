@@ -1948,6 +1948,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 554384567}
+  - component: {fileID: 554384568}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -1976,6 +1977,36 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &554384568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554384566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a8bd2ad519933d4da34ea41f17e109f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HUDController
+  _roundManager: {fileID: 1928878840}
+  _shipHealth: {fileID: 1383435900}
+  _boostAbility: {fileID: 1383435897}
+  _shieldAbility: {fileID: 1383435899}
+  _hullText: {fileID: 263130044}
+  _hullPoint1: {fileID: 1067893845}
+  _hullPoint2: {fileID: 559798393}
+  _hullPoint3: {fileID: 434421902}
+  _scoreText: {fileID: 540152174}
+  _timerText: {fileID: 1609415450}
+  _phaseText: {fileID: 645646721}
+  _player1BoostFill: {fileID: 669636773}
+  _player1ShieldFill: {fileID: 1303205247}
+  _player2BoostFill: {fileID: 1885389637}
+  _player2ShieldFill: {fileID: 1088791153}
+  _fluxBanner: {fileID: 337368534}
+  _fluxText: {fileID: 951497566}
+  _reversalBannerSeconds: 1.25
 --- !u!1 &559798391
 GameObject:
   m_ObjectHideFlags: 0
@@ -4686,6 +4717,7 @@ GameObject:
   - component: {fileID: 1072634448}
   - component: {fileID: 1072634447}
   - component: {fileID: 1072634446}
+  - component: {fileID: 1072634450}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4779,6 +4811,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1072634450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072634445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d17815513bf36da4faec8237e480a197, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EndRoundUI
+  _roundManager: {fileID: 1928878840}
+  _endRoundPanel: {fileID: 170463130}
+  _resultText: {fileID: 701312556}
+  _finalScoreText: {fileID: 310156994}
+  _restartButton: {fileID: 1834692907}
+  _quitButton: {fileID: 1234059407}
 --- !u!1 &1088791151
 GameObject:
   m_ObjectHideFlags: 0
@@ -5829,6 +5879,7 @@ GameObject:
   - component: {fileID: 1383435898}
   - component: {fileID: 1383435899}
   - component: {fileID: 1383435900}
+  - component: {fileID: 1383435901}
   m_Layer: 8
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -6017,6 +6068,27 @@ MonoBehaviour:
   _shieldAbility: {fileID: 1383435899}
   _startingHull: 3
   _invulnerabilitySeconds: 1
+--- !u!114 &1383435901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383435892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e83b1b704af60a448c4acdd2c1a7fa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShipVisualTilt
+  _shipVisual: {fileID: 290986066}
+  _firePoint: {fileID: 1617030496}
+  _reticle: {fileID: 1232662014}
+  _roundManager: {fileID: 1928878840}
+  _shipController: {fileID: 1383435896}
+  _maxAimTiltDegrees: 15
+  _maxMoveBankDegrees: 6
+  _maxCombinedTiltDegrees: 21
+  _responseSpeed: 8
 --- !u!1 &1402557922
 GameObject:
   m_ObjectHideFlags: 0

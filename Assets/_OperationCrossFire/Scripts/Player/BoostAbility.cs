@@ -19,6 +19,8 @@ public class BoostAbility : MonoBehaviour
     public float CooldownRemainingSeconds =>
         Time.time >= _cooldownReadyAtTime ? 0f : _cooldownReadyAtTime - Time.time;
 
+    public float CooldownDurationSeconds => _cooldownSeconds;
+
     void Awake()
     {
         if (_roundManager == null)
