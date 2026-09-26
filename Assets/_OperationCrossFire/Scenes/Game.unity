@@ -1614,6 +1614,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 481124497}
+  - component: {fileID: 481124498}
   m_Layer: 0
   m_Name: RoleManager
   m_TagString: Untagged
@@ -1636,6 +1637,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1726579635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &481124498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481124496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be9291e09e9985e41b2d8b9f05193b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoleManager
 --- !u!1 &482203830
 GameObject:
   m_ObjectHideFlags: 0
@@ -6817,6 +6830,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1928878839}
+  - component: {fileID: 1928878840}
   m_Layer: 0
   m_Name: RoundManager
   m_TagString: Untagged
@@ -6839,6 +6853,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1726579635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1928878840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928878838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 533dccd48899b0d449329732e83db799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoundManager
+  _roundDurationSeconds: 60
+  _roleManager: {fileID: 481124498}
+  _developmentDiagnostics: 1
 --- !u!1 &1957685776
 GameObject:
   m_ObjectHideFlags: 0
