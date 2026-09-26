@@ -4516,6 +4516,7 @@ GameObject:
   m_Component:
   - component: {fileID: 921928176}
   - component: {fileID: 921928177}
+  - component: {fileID: 921928178}
   m_Layer: 0
   m_Name: InputRouter
   m_TagString: Untagged
@@ -4554,6 +4555,23 @@ MonoBehaviour:
   _roundManager: {fileID: 1928878840}
   _shipController: {fileID: 1383435896}
   _boostAbility: {fileID: 1383435897}
+--- !u!114 &921928178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921928175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4439de759d5efa84981f9e9af486ecc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GunnerEditorInputAdapter
+  _roundManager: {fileID: 1928878840}
+  _roleManager: {fileID: 481124498}
+  _gameplayCamera: {fileID: 519420031}
+  _reticleController: {fileID: 1232662016}
+  _weaponController: {fileID: 1383435898}
 --- !u!1 &931025125
 GameObject:
   m_ObjectHideFlags: 0
@@ -5268,6 +5286,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1134874328}
+  - component: {fileID: 1134874329}
   m_Layer: 0
   m_Name: PoolManager
   m_TagString: Untagged
@@ -5290,6 +5309,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1726579635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1134874329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134874327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7059cf576e71dcd42afd4188c7cb71ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolManager
+  _roundManager: {fileID: 1928878840}
+  _playerProjectilePrefab: {fileID: 4612667558296021740, guid: 7bd1d9e9dbcd2fe4d9ca498ac879a288, type: 3}
+  _poolRoot: {fileID: 206519738}
+  _playerProjectilePrewarmCount: 32
 --- !u!1 &1232662013
 GameObject:
   m_ObjectHideFlags: 0
@@ -5300,6 +5335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1232662014}
   - component: {fileID: 1232662015}
+  - component: {fileID: 1232662016}
   m_Layer: 0
   m_Name: Reticle
   m_TagString: Untagged
@@ -5381,6 +5417,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1232662016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232662013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ff4abcbe73145f44aa1f3720002d98c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReticleController
+  _roundManager: {fileID: 1928878840}
+  _roleManager: {fileID: 481124498}
+  _gameplayCamera: {fileID: 519420031}
+  _firePoint: {fileID: 1617030496}
+  _horizontalEdgeMargin: 0.4
+  _verticalEdgeMargin: 0.4
 --- !u!1 &1234059405
 GameObject:
   m_ObjectHideFlags: 0
@@ -5727,6 +5781,7 @@ GameObject:
   - component: {fileID: 1383435894}
   - component: {fileID: 1383435897}
   - component: {fileID: 1383435896}
+  - component: {fileID: 1383435898}
   m_Layer: 8
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -5864,6 +5919,24 @@ MonoBehaviour:
   _durationSeconds: 1
   _movementMultiplier: 1.75
   _cooldownSeconds: 4
+--- !u!114 &1383435898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383435892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97d2ea3dc89bc334fbd7ce90547a9d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponController
+  _roundManager: {fileID: 1928878840}
+  _roleManager: {fileID: 481124498}
+  _poolManager: {fileID: 1134874329}
+  _firePoint: {fileID: 1617030496}
+  _reticle: {fileID: 1232662014}
+  _fireCooldownSeconds: 0.25
 --- !u!1 &1481676256
 GameObject:
   m_ObjectHideFlags: 0

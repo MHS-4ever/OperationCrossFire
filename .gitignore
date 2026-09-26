@@ -114,3 +114,6 @@ InitTestScene*.unity*
 
 # DevDocs folder
 /DevDocs/
+
+# Tools folder
+/Tools/

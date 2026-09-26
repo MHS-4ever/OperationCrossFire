@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 2637137539525402749}
   - component: {fileID: 4828248998623912148}
   - component: {fileID: 8183673873195833280}
+  - component: {fileID: 4612667558296021740}
   m_Layer: 11
   m_Name: PlayerProjectile
   m_TagString: Untagged
@@ -198,3 +199,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.15, y: 0.55}
   m_EdgeRadius: 0
+--- !u!114 &4612667558296021740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661237658547101633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8a4981d1bab3784b9755ddd8acd3e9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerProjectile
+  _rigidbody: {fileID: 4828248998623912148}
+  _boxCollider: {fileID: 8183673873195833280}
+  _travelSpeed: 12
+  _maxLifetimeSeconds: 3
