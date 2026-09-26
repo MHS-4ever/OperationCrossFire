@@ -19,6 +19,8 @@ public class ShipHealth : MonoBehaviour
         Time.time >= _invulnerableUntil ? 0f : _invulnerableUntil - Time.time;
 
     public event Action<int> HullChanged;
+    public event Action<int> HullLost;
+    public event Action ShieldIntercepted;
 
     void Awake()
     {
@@ -79,6 +81,16 @@ public class ShipHealth : MonoBehaviour
             return;
         }
 
+        if (TryConsumeShieldedContact())
+        {
+            if (threat.IsInUse)
+            {
+                threat.ReturnToPool();
+            }
+
+            return;
+        }
+
         TryApplyUnshieldedHullLoss();
 
         if (threat.IsInUse)
@@ -94,12 +106,33 @@ public class ShipHealth : MonoBehaviour
             return;
         }
 
+        if (TryConsumeShieldedContact())
+        {
+            if (projectile.IsInUse)
+            {
+                projectile.ReturnToPool();
+            }
+
+            return;
+        }
+
         TryApplyUnshieldedHullLoss();
 
         if (projectile.IsInUse)
         {
             projectile.ReturnToPool();
         }
+    }
+
+    bool TryConsumeShieldedContact()
+    {
+        if (_shieldAbility == null || !_shieldAbility.IsActive)
+        {
+            return false;
+        }
+
+        ShieldIntercepted?.Invoke();
+        return true;
     }
 
     void TryApplyUnshieldedHullLoss()
@@ -128,6 +161,7 @@ public class ShipHealth : MonoBehaviour
         _invulnerableUntil = Time.time + Mathf.Max(0f, _invulnerabilitySeconds);
         _currentHull = Mathf.Max(0, _currentHull - 1);
         HullChanged?.Invoke(_currentHull);
+        HullLost?.Invoke(_currentHull);
 
         if (_currentHull == 0 && !_reportedHullDepleted)
         {

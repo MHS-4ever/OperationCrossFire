@@ -149,6 +149,11 @@ public class PlayerInputRouter : MonoBehaviour
         _reticleController.SetAimNormalized(player, normalizedPosition);
     }
 
+    public bool AcceptsAimInput(PlayerId player)
+    {
+        return CanGunnerCommand(player);
+    }
+
     /// <summary>UI source. Touch HoldControls should use this overload.</summary>
     public void SetGunnerFireHeld(PlayerId player, bool held)
     {

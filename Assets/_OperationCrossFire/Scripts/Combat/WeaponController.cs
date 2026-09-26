@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class WeaponController : MonoBehaviour
@@ -14,6 +15,8 @@ public class WeaponController : MonoBehaviour
     bool _fireHeld;
     PlayerId _fireHeldPlayer;
     float _nextFireTime;
+
+    public event Action ShotFired;
 
     void Awake()
     {
@@ -164,7 +167,13 @@ public class WeaponController : MonoBehaviour
             return false;
         }
 
-        return projectile.TryLaunch(origin, direction);
+        if (!projectile.TryLaunch(origin, direction))
+        {
+            return false;
+        }
+
+        ShotFired?.Invoke();
+        return true;
     }
 
     void HandleFluxOrRoundStop()

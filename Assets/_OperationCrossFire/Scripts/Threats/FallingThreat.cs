@@ -20,10 +20,16 @@ public class FallingThreat : MonoBehaviour
 
     PoolManager _ownerPool;
     RoundManager _roundManager;
+    SpriteRenderer _visual;
+    Color _authoredColor = Color.white;
+    float _hitFlashUntil;
     float _baseDownwardSpeed;
     float _nextFireTime;
     int _currentHealth;
     bool _isInUse;
+    bool _useOffscreenFallback;
+    float _offscreenFallbackY;
+    float _colliderHalfHeight;
 
     public ThreatKind Kind => _kind;
     public int CurrentHealth => _currentHealth;
@@ -51,6 +57,14 @@ public class FallingThreat : MonoBehaviour
         {
             Debug.LogError($"{nameof(FallingThreat)} enemy fire interval must be greater than zero.", this);
         }
+
+        _visual = GetComponentInChildren<SpriteRenderer>(true);
+        if (_visual != null)
+        {
+            _authoredColor = _visual.color;
+        }
+
+        CacheColliderHalfHeight();
     }
 
     void FixedUpdate()
@@ -61,11 +75,27 @@ public class FallingThreat : MonoBehaviour
         }
 
         float speed = CurrentDownwardSpeed();
-        _rigidbody.MovePosition(_rigidbody.position + Vector2.down * (speed * Time.fixedDeltaTime));
+        Vector2 nextPosition = _rigidbody.position + Vector2.down * (speed * Time.fixedDeltaTime);
+        _rigidbody.MovePosition(nextPosition);
 
         if (_kind == ThreatKind.Enemy)
         {
             TryFireIfDue();
+        }
+
+        TryOffscreenFallbackCleanup(nextPosition.y);
+    }
+
+    void LateUpdate()
+    {
+        if (_hitFlashUntil <= 0f || _visual == null)
+        {
+            return;
+        }
+
+        if (Time.time >= _hitFlashUntil)
+        {
+            RestoreAuthoredColor();
         }
     }
 
@@ -100,8 +130,21 @@ public class FallingThreat : MonoBehaviour
         _rigidbody.linearVelocity = Vector2.zero;
         _rigidbody.angularVelocity = 0f;
         _collider.enabled = true;
+        RestoreAuthoredColor();
         gameObject.SetActive(true);
         return true;
+    }
+
+    internal void SetOffscreenFallback(float worldY)
+    {
+        _useOffscreenFallback = true;
+        _offscreenFallbackY = worldY;
+    }
+
+    internal void ClearOffscreenFallback()
+    {
+        _useOffscreenFallback = false;
+        _offscreenFallbackY = 0f;
     }
 
     public bool TakeDamage(int amount)
@@ -119,6 +162,17 @@ public class FallingThreat : MonoBehaviour
 
         ReturnToPool();
         return true;
+    }
+
+    public void PlayHitFlash()
+    {
+        if (!_isInUse || _visual == null)
+        {
+            return;
+        }
+
+        _visual.color = Color.Lerp(_authoredColor, Color.white, 0.65f);
+        _hitFlashUntil = Time.time + 0.08f;
     }
 
     public void ReturnToPool()
@@ -142,7 +196,10 @@ public class FallingThreat : MonoBehaviour
         _isInUse = false;
         _baseDownwardSpeed = 0f;
         _nextFireTime = 0f;
+        _hitFlashUntil = 0f;
         _currentHealth = _startingHealth;
+        ClearOffscreenFallback();
+        RestoreAuthoredColor();
 
         if (_rigidbody != null)
         {
@@ -178,6 +235,49 @@ public class FallingThreat : MonoBehaviour
         return _baseDownwardSpeed;
     }
 
+    void CacheColliderHalfHeight()
+    {
+        if (_collider == null)
+        {
+            return;
+        }
+
+        float scaleY = Mathf.Abs(transform.lossyScale.y);
+        if (scaleY <= 0.0001f)
+        {
+            scaleY = 1f;
+        }
+
+        if (_collider is CircleCollider2D circle)
+        {
+            _colliderHalfHeight = circle.radius * scaleY;
+            return;
+        }
+
+        if (_collider is BoxCollider2D box)
+        {
+            _colliderHalfHeight = box.size.y * 0.5f * scaleY;
+            return;
+        }
+
+        _colliderHalfHeight = _collider.bounds.extents.y;
+    }
+
+    void TryOffscreenFallbackCleanup(float worldY)
+    {
+        if (!_useOffscreenFallback)
+        {
+            return;
+        }
+
+        if (worldY + _colliderHalfHeight >= _offscreenFallbackY)
+        {
+            return;
+        }
+
+        ReturnToPool();
+    }
+
     void TryFireIfDue()
     {
         if (Time.time < _nextFireTime)
@@ -201,6 +301,15 @@ public class FallingThreat : MonoBehaviour
         if (!projectile.TryLaunch(firePosition))
         {
             return;
+        }
+    }
+
+    void RestoreAuthoredColor()
+    {
+        _hitFlashUntil = 0f;
+        if (_visual != null)
+        {
+            _visual.color = _authoredColor;
         }
     }
 }

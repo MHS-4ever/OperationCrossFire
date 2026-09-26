@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ShieldAbility : MonoBehaviour
@@ -17,6 +18,8 @@ public class ShieldAbility : MonoBehaviour
         Time.time >= _cooldownReadyAtTime ? 0f : _cooldownReadyAtTime - Time.time;
 
     public float CooldownDurationSeconds => _cooldownSeconds;
+
+    public event Action Activated;
 
     void Awake()
     {
@@ -114,6 +117,7 @@ public class ShieldAbility : MonoBehaviour
         _activeEndTime = now + _durationSeconds;
         _cooldownReadyAtTime = now + _cooldownSeconds;
         SetShieldVisualActive(true);
+        Activated?.Invoke();
         return true;
     }
 

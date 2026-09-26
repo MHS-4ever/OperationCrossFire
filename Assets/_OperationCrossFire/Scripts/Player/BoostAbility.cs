@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BoostAbility : MonoBehaviour
@@ -20,6 +21,8 @@ public class BoostAbility : MonoBehaviour
         Time.time >= _cooldownReadyAtTime ? 0f : _cooldownReadyAtTime - Time.time;
 
     public float CooldownDurationSeconds => _cooldownSeconds;
+
+    public event Action Activated;
 
     void Awake()
     {
@@ -106,6 +109,7 @@ public class BoostAbility : MonoBehaviour
         float now = Time.time;
         _activeEndTime = now + _durationSeconds;
         _cooldownReadyAtTime = now + _cooldownSeconds;
+        Activated?.Invoke();
         return true;
     }
 

@@ -8,7 +8,6 @@ public class HUDController : MonoBehaviour
     [SerializeField] ShipHealth _shipHealth;
     [SerializeField] BoostAbility _boostAbility;
     [SerializeField] ShieldAbility _shieldAbility;
-    [SerializeField] TextMeshProUGUI _hullText;
     [SerializeField] Image _hullPoint1;
     [SerializeField] Image _hullPoint2;
     [SerializeField] Image _hullPoint3;
@@ -26,9 +25,14 @@ public class HUDController : MonoBehaviour
     int _displayedTimerSeconds = int.MinValue;
     int _displayedScore = int.MinValue;
     int _displayedHull = int.MinValue;
-    int _displayedStartingHull = int.MinValue;
     RoundPhase _displayedPhase = (RoundPhase)int.MinValue;
     float _hideReversalAt;
+    RectTransform _fluxBannerRect;
+    Image _fluxBannerImage;
+    Vector3 _fluxBannerBaseScale = Vector3.one;
+    Color _fluxBannerBaseColor = Color.white;
+    float _bannerPulseUntil;
+    float _bannerFlashUntil;
 
     void Awake()
     {
@@ -52,9 +56,9 @@ public class HUDController : MonoBehaviour
             Debug.LogError($"{nameof(HUDController)} requires a {nameof(ShieldAbility)} reference.", this);
         }
 
-        if (_hullText == null || _scoreText == null || _timerText == null || _phaseText == null)
+        if (_scoreText == null || _timerText == null || _phaseText == null)
         {
-            Debug.LogError($"{nameof(HUDController)} requires Hull, Score, Timer, and Phase text references.", this);
+            Debug.LogError($"{nameof(HUDController)} requires Score, Timer, and Phase text references.", this);
         }
 
         if (_hullPoint1 == null || _hullPoint2 == null || _hullPoint3 == null)
@@ -78,7 +82,28 @@ public class HUDController : MonoBehaviour
             Debug.LogError($"{nameof(HUDController)} reversal banner duration cannot be negative.", this);
         }
 
+        CacheFluxBannerVisuals();
         HideFluxBanner();
+    }
+
+    void CacheFluxBannerVisuals()
+    {
+        if (_fluxBanner == null)
+        {
+            return;
+        }
+
+        _fluxBannerRect = _fluxBanner.transform as RectTransform;
+        if (_fluxBannerRect != null)
+        {
+            _fluxBannerBaseScale = _fluxBannerRect.localScale;
+        }
+
+        _fluxBannerImage = _fluxBanner.GetComponent<Image>();
+        if (_fluxBannerImage != null)
+        {
+            _fluxBannerBaseColor = _fluxBannerImage.color;
+        }
     }
 
     void OnEnable()
@@ -134,6 +159,8 @@ public class HUDController : MonoBehaviour
             _hideReversalAt = 0f;
             HideFluxBanner();
         }
+
+        UpdateFluxBannerMotion();
     }
 
     void RefreshStaticDisplays()
@@ -148,7 +175,7 @@ public class HUDController : MonoBehaviour
 
         if (_shipHealth != null)
         {
-            ApplyHull(_shipHealth.CurrentHull, _shipHealth.StartingHull);
+            ApplyHull(_shipHealth.CurrentHull);
         }
     }
 
@@ -189,28 +216,17 @@ public class HUDController : MonoBehaviour
 
     void HandleHullChanged(int hull)
     {
-        if (_shipHealth == null)
-        {
-            return;
-        }
-
-        ApplyHull(hull, _shipHealth.StartingHull);
+        ApplyHull(hull);
     }
 
-    void ApplyHull(int hull, int startingHull)
+    void ApplyHull(int hull)
     {
-        if (hull == _displayedHull && startingHull == _displayedStartingHull)
+        if (hull == _displayedHull)
         {
             return;
         }
 
         _displayedHull = hull;
-        _displayedStartingHull = startingHull;
-
-        if (_hullText != null)
-        {
-            _hullText.text = $"HULL {hull}/{startingHull}";
-        }
 
         SetHullPoint(_hullPoint1, hull >= 1);
         SetHullPoint(_hullPoint2, hull >= 2);
@@ -299,13 +315,21 @@ public class HUDController : MonoBehaviour
     void HandleFluxWarning(int countdown)
     {
         _hideReversalAt = 0f;
+        RestoreFluxBannerColor();
         ShowFluxBanner($"QUANTUM FLUX IN {countdown}...");
+        _bannerPulseUntil = Time.time + 0.18f;
     }
 
     void HandleFluxStarting()
     {
         ShowFluxBanner("QUANTUM FLUX — ROLES REVERSED");
         _hideReversalAt = Time.time + Mathf.Max(0f, _reversalBannerSeconds);
+        _bannerPulseUntil = Time.time + 0.18f;
+        if (_fluxBannerImage != null)
+        {
+            _fluxBannerImage.color = new Color(0.35f, 0.85f, 1f, _fluxBannerBaseColor.a);
+            _bannerFlashUntil = Time.time + 0.18f;
+        }
     }
 
     void HandleRoundEnded(RoundEndReason reason)
@@ -329,9 +353,67 @@ public class HUDController : MonoBehaviour
 
     void HideFluxBanner()
     {
+        _bannerPulseUntil = 0f;
+        _bannerFlashUntil = 0f;
+        RestoreFluxBannerScale();
+        RestoreFluxBannerColor();
+
         if (_fluxBanner != null && _fluxBanner.activeSelf)
         {
             _fluxBanner.SetActive(false);
+        }
+    }
+
+    void UpdateFluxBannerMotion()
+    {
+        if (_fluxBanner == null || !_fluxBanner.activeSelf)
+        {
+            return;
+        }
+
+        if (_bannerPulseUntil > 0f && _fluxBannerRect != null)
+        {
+            float remaining = _bannerPulseUntil - Time.time;
+            if (remaining <= 0f)
+            {
+                _bannerPulseUntil = 0f;
+                RestoreFluxBannerScale();
+            }
+            else
+            {
+                float t = 1f - (remaining / 0.18f);
+                float scale = 1f + (0.08f * Mathf.Sin(t * Mathf.PI));
+                _fluxBannerRect.localScale = _fluxBannerBaseScale * scale;
+            }
+        }
+
+        if (_bannerFlashUntil > 0f && Time.time >= _bannerFlashUntil)
+        {
+            _bannerFlashUntil = 0f;
+            RestoreFluxBannerColor();
+        }
+        else if (_bannerFlashUntil > 0f && _fluxBannerImage != null)
+        {
+            float t = 1f - ((_bannerFlashUntil - Time.time) / 0.18f);
+            Color cyan = new Color(0.35f, 0.85f, 1f, _fluxBannerBaseColor.a);
+            Color red = new Color(1f, 0.28f, 0.28f, _fluxBannerBaseColor.a);
+            _fluxBannerImage.color = Color.Lerp(cyan, red, Mathf.Clamp01(t));
+        }
+    }
+
+    void RestoreFluxBannerScale()
+    {
+        if (_fluxBannerRect != null)
+        {
+            _fluxBannerRect.localScale = _fluxBannerBaseScale;
+        }
+    }
+
+    void RestoreFluxBannerColor()
+    {
+        if (_fluxBannerImage != null)
+        {
+            _fluxBannerImage.color = _fluxBannerBaseColor;
         }
     }
 }

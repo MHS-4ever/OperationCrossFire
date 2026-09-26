@@ -204,8 +204,8 @@ MonoBehaviour:
   _rigidbody: {fileID: 6751433314686337853}
   _collider: {fileID: 1418282919776821390}
   _kind: 1
-  _startingHealth: 1
-  _scoreValue: 10
+  _startingHealth: 2
+  _scoreValue: 15
   _enemyFireIntervalSeconds: 2.5
   _enemyFirstFireDelaySeconds: 1.25
   _enemyFireOffsetDown: 0.5

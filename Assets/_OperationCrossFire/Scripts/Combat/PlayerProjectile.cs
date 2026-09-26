@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerProjectile : MonoBehaviour
@@ -16,6 +17,9 @@ public class PlayerProjectile : MonoBehaviour
     bool _isInUse;
 
     public bool IsInUse => _isInUse;
+
+    public static event Action<FallingThreat> ThreatDamaged;
+    public static event Action<Vector2, ThreatKind> ThreatDestroyed;
 
     void Awake()
     {
@@ -149,13 +153,23 @@ public class PlayerProjectile : MonoBehaviour
             return;
         }
 
+        Vector2 contact = threat.transform.position;
+        ThreatKind kind = threat.Kind;
         int scoreValue = threat.ScoreValue;
         bool destroyed = threat.TakeDamage(1);
         ReturnToPool();
 
-        if (destroyed && _roundManager != null)
+        if (destroyed)
         {
-            _roundManager.AddScore(scoreValue);
+            ThreatDestroyed?.Invoke(contact, kind);
+            if (_roundManager != null)
+            {
+                _roundManager.AddScore(scoreValue);
+            }
+
+            return;
         }
+
+        ThreatDamaged?.Invoke(threat);
     }
 }
