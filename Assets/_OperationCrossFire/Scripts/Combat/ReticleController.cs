@@ -54,6 +54,23 @@ public class ReticleController : MonoBehaviour
         return _roleManager.IsGunner(player);
     }
 
+    public void SetAimNormalized(PlayerId player, Vector2 normalizedPosition)
+    {
+        if (!_configurationValid)
+        {
+            return;
+        }
+
+        if (!TryGetAimBounds(out float minX, out float maxX, out float minY, out float maxY))
+        {
+            return;
+        }
+
+        float x = Mathf.Lerp(minX, maxX, Mathf.Clamp01(normalizedPosition.x));
+        float y = Mathf.Lerp(minY, maxY, Mathf.Clamp01(normalizedPosition.y));
+        SetAimWorldPosition(player, new Vector2(x, y));
+    }
+
     bool ValidateConfiguration(bool logErrors)
     {
         bool valid = true;

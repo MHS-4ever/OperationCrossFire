@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 2581010459600138285}
   - component: {fileID: 8257678191310905450}
   - component: {fileID: 8203280099480287238}
+  - component: {fileID: 8068802391578771231}
   m_Layer: 10
   m_Name: BreachHazard
   m_TagString: Untagged
@@ -198,3 +199,23 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.55, y: 0.6}
   m_EdgeRadius: 0
+--- !u!114 &8068802391578771231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3159826550593354251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce7e27a9fd2293345936c08fad19ce1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallingThreat
+  _rigidbody: {fileID: 8257678191310905450}
+  _collider: {fileID: 8203280099480287238}
+  _kind: 2
+  _startingHealth: 1
+  _scoreValue: 10
+  _enemyFireIntervalSeconds: 2.5
+  _enemyFirstFireDelaySeconds: 1.25
+  _enemyFireOffsetDown: 0.5

@@ -4,8 +4,7 @@ public class PilotKeyboardTestInput : MonoBehaviour
 {
     [SerializeField] RoleManager _roleManager;
     [SerializeField] RoundManager _roundManager;
-    [SerializeField] ShipController _shipController;
-    [SerializeField] BoostAbility _boostAbility;
+    [SerializeField] PlayerInputRouter _router;
 
     bool _awaitingKeyReleaseAfterFluxOrEnd;
 
@@ -21,14 +20,9 @@ public class PilotKeyboardTestInput : MonoBehaviour
             Debug.LogError($"{nameof(PilotKeyboardTestInput)} requires a {nameof(RoundManager)} reference.", this);
         }
 
-        if (_shipController == null)
+        if (_router == null)
         {
-            Debug.LogError($"{nameof(PilotKeyboardTestInput)} requires a {nameof(ShipController)} reference.", this);
-        }
-
-        if (_boostAbility == null)
-        {
-            Debug.LogError($"{nameof(PilotKeyboardTestInput)} requires a {nameof(BoostAbility)} reference.", this);
+            Debug.LogError($"{nameof(PilotKeyboardTestInput)} requires a {nameof(PlayerInputRouter)} reference.", this);
         }
     }
 
@@ -64,7 +58,7 @@ public class PilotKeyboardTestInput : MonoBehaviour
 #if UNITY_EDITOR
     void PollEditorKeyboard()
     {
-        if (_roleManager == null || _roundManager == null || _shipController == null || _boostAbility == null)
+        if (_roleManager == null || _roundManager == null || _router == null)
         {
             return;
         }
@@ -86,17 +80,17 @@ public class PilotKeyboardTestInput : MonoBehaviour
 
         if (!TryGetCurrentPilot(out PlayerId pilot))
         {
-            _shipController.ClearMovement();
             return;
         }
 
         bool leftHeld = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
         bool rightHeld = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
-        _shipController.SetMovement(pilot, leftHeld, rightHeld);
+        _router.SetPilotLeft(pilot, leftHeld, InputSource.Editor);
+        _router.SetPilotRight(pilot, rightHeld, InputSource.Editor);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            _boostAbility.TryActivate(pilot);
+            _router.TryPilotBoost(pilot);
         }
     }
 
@@ -112,13 +106,11 @@ public class PilotKeyboardTestInput : MonoBehaviour
 
     void HandleFluxStarting()
     {
-        _shipController?.ClearMovement();
         _awaitingKeyReleaseAfterFluxOrEnd = true;
     }
 
     void HandleRoundEnded(RoundEndReason reason)
     {
-        _shipController?.ClearMovement();
         _awaitingKeyReleaseAfterFluxOrEnd = true;
     }
 

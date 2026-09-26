@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 1861826654733466284}
   - component: {fileID: 6751433314686337853}
   - component: {fileID: 1418282919776821390}
+  - component: {fileID: 4428921481568529154}
   m_Layer: 10
   m_Name: Debris
   m_TagString: Untagged
@@ -188,3 +189,23 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.35
+--- !u!114 &4428921481568529154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7019717381617038579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce7e27a9fd2293345936c08fad19ce1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallingThreat
+  _rigidbody: {fileID: 6751433314686337853}
+  _collider: {fileID: 1418282919776821390}
+  _kind: 1
+  _startingHealth: 1
+  _scoreValue: 10
+  _enemyFireIntervalSeconds: 2.5
+  _enemyFirstFireDelaySeconds: 1.25
+  _enemyFireOffsetDown: 0.5

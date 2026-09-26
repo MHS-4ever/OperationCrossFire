@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7691379698177851272}
   - component: {fileID: 5499732922937597992}
   - component: {fileID: 6891091505637200309}
+  - component: {fileID: 5428282172691497107}
   m_Layer: 10
   m_Name: Enemy
   m_TagString: Untagged
@@ -107,6 +108,26 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.6, y: 0.6}
   m_EdgeRadius: 0
+--- !u!114 &5428282172691497107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6806217627384637104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce7e27a9fd2293345936c08fad19ce1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallingThreat
+  _rigidbody: {fileID: 5499732922937597992}
+  _collider: {fileID: 6891091505637200309}
+  _kind: 0
+  _startingHealth: 1
+  _scoreValue: 10
+  _enemyFireIntervalSeconds: 2.5
+  _enemyFirstFireDelaySeconds: 1.25
+  _enemyFireOffsetDown: 0.5
 --- !u!1 &7453812106855667832
 GameObject:
   m_ObjectHideFlags: 0
