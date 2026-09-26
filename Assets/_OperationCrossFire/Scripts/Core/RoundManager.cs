@@ -23,6 +23,7 @@ public class RoundManager : MonoBehaviour
     bool _isRunning;
     bool _roundEnded;
     RoundEndReason _endReason = RoundEndReason.None;
+    int _score;
 
     bool _firstFluxTransitionApplied;
     bool _secondFluxTransitionApplied;
@@ -39,12 +40,14 @@ public class RoundManager : MonoBehaviour
     public RoundPhase CurrentPhase => _currentPhase;
     public bool IsRunning => _isRunning;
     public RoundEndReason EndReason => _endReason;
+    public int Score => _score;
 
     public event Action<int> FluxWarning;
     public event Action FluxStarting;
     public event Action<RoundPhase> PhaseChanged;
     public event Action FluxCompleted;
     public event Action<RoundEndReason> RoundEnded;
+    public event Action<int> ScoreChanged;
 
     void Awake()
     {
@@ -71,6 +74,8 @@ public class RoundManager : MonoBehaviour
         _isRunning = true;
         _roundEnded = false;
         _endReason = RoundEndReason.None;
+        _score = 0;
+        ScoreChanged?.Invoke(_score);
 
         _firstFluxTransitionApplied = false;
         _secondFluxTransitionApplied = false;
@@ -120,6 +125,17 @@ public class RoundManager : MonoBehaviour
         }
 
         EndRound(RoundEndReason.BreachReached);
+    }
+
+    public void AddScore(int points)
+    {
+        if (!_isRunning || _roundEnded || points <= 0)
+        {
+            return;
+        }
+
+        _score += points;
+        ScoreChanged?.Invoke(_score);
     }
 
     void ProcessMilestonesInChronologicalOrder()

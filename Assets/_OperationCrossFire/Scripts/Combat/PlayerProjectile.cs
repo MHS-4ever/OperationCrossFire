@@ -10,6 +10,7 @@ public class PlayerProjectile : MonoBehaviour
     [SerializeField] float _maxLifetimeSeconds = 3f;
 
     PoolManager _ownerPool;
+    RoundManager _roundManager;
     Vector2 _direction;
     float _despawnTime;
     bool _isInUse;
@@ -56,9 +57,10 @@ public class PlayerProjectile : MonoBehaviour
         _rigidbody.MovePosition(_rigidbody.position + delta);
     }
 
-    internal void Initialize(PoolManager ownerPool)
+    internal void Initialize(PoolManager ownerPool, RoundManager roundManager)
     {
         _ownerPool = ownerPool;
+        _roundManager = roundManager;
     }
 
     public bool TryLaunch(Vector2 worldPosition, Vector2 direction)
@@ -132,5 +134,28 @@ public class PlayerProjectile : MonoBehaviour
         }
 
         gameObject.SetActive(false);
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!_isInUse || other == null)
+        {
+            return;
+        }
+
+        FallingThreat threat = other.GetComponentInParent<FallingThreat>();
+        if (threat == null || !threat.IsInUse)
+        {
+            return;
+        }
+
+        int scoreValue = threat.ScoreValue;
+        bool destroyed = threat.TakeDamage(1);
+        ReturnToPool();
+
+        if (destroyed && _roundManager != null)
+        {
+            _roundManager.AddScore(scoreValue);
+        }
     }
 }

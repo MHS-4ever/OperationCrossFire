@@ -11,6 +11,7 @@ public class PlayerInputRouter : MonoBehaviour
     [SerializeField] BoostAbility _boostAbility;
     [SerializeField] ReticleController _reticleController;
     [SerializeField] WeaponController _weaponController;
+    [SerializeField] ShieldAbility _shieldAbility;
 
     readonly bool[,] _leftHeld = new bool[PlayerCount, SourceCount];
     readonly bool[,] _rightHeld = new bool[PlayerCount, SourceCount];
@@ -50,6 +51,11 @@ public class PlayerInputRouter : MonoBehaviour
         if (_weaponController == null)
         {
             Debug.LogError($"{nameof(PlayerInputRouter)} requires a {nameof(WeaponController)} reference.", this);
+        }
+
+        if (_shieldAbility == null)
+        {
+            Debug.LogError($"{nameof(PlayerInputRouter)} requires a {nameof(ShieldAbility)} reference.", this);
         }
     }
 
@@ -175,18 +181,14 @@ public class PlayerInputRouter : MonoBehaviour
         ApplyFire(player);
     }
 
-    /// <summary>
-    /// Phase 8 will connect ShieldAbility. Intentionally returns false after role/round validation.
-    /// Does not activate Boost, aim, or Fire.
-    /// </summary>
     public bool TryGunnerShield(PlayerId player)
     {
-        if (!CanGunnerCommand(player))
+        if (!CanGunnerCommand(player) || _shieldAbility == null)
         {
             return false;
         }
 
-        return false;
+        return _shieldAbility.TryActivate(player);
     }
 
     public void CancelAllInput()

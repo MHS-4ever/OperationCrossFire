@@ -2794,7 +2794,6 @@ MonoBehaviour:
   _roleManager: {fileID: 481124498}
   _pilotControls: {fileID: 774830582}
   _gunnerControls: {fileID: 1517250024}
-  _roleLabel: {fileID: 1637381573}
 --- !u!222 &677827678
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2866,7 +2865,6 @@ MonoBehaviour:
   _roleManager: {fileID: 481124498}
   _pilotControls: {fileID: 124609977}
   _gunnerControls: {fileID: 660886082}
-  _roleLabel: {fileID: 206272457}
 --- !u!1 &698918287
 GameObject:
   m_ObjectHideFlags: 0
@@ -4370,6 +4368,7 @@ MonoBehaviour:
   _boostAbility: {fileID: 1383435897}
   _reticleController: {fileID: 1232662016}
   _weaponController: {fileID: 1383435898}
+  _shieldAbility: {fileID: 1383435899}
 --- !u!1 &951497564
 GameObject:
   m_ObjectHideFlags: 0
@@ -5828,6 +5827,8 @@ GameObject:
   - component: {fileID: 1383435897}
   - component: {fileID: 1383435896}
   - component: {fileID: 1383435898}
+  - component: {fileID: 1383435899}
+  - component: {fileID: 1383435900}
   m_Layer: 8
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -5983,6 +5984,39 @@ MonoBehaviour:
   _firePoint: {fileID: 1617030496}
   _reticle: {fileID: 1232662014}
   _fireCooldownSeconds: 0.25
+--- !u!114 &1383435899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383435892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39b9dfe2f2dd59f41966d3f8283ee738, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShieldAbility
+  _roundManager: {fileID: 1928878840}
+  _roleManager: {fileID: 481124498}
+  _shieldVisual: {fileID: 286127105}
+  _durationSeconds: 1.5
+  _cooldownSeconds: 5
+--- !u!114 &1383435900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383435892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab03a2d2a93054c4694a87e4c98291d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShipHealth
+  _roundManager: {fileID: 1928878840}
+  _shieldAbility: {fileID: 1383435899}
+  _startingHull: 3
+  _invulnerabilitySeconds: 1
 --- !u!1 &1402557922
 GameObject:
   m_ObjectHideFlags: 0

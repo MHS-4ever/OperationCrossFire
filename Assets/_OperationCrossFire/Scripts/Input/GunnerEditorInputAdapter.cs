@@ -10,6 +10,7 @@ public class GunnerEditorInputAdapter : MonoBehaviour
     [SerializeField] PlayerInputRouter _router;
 
     bool _awaitingMouseReleaseAfterFluxOrEnd;
+    bool _awaitingRightReleaseAfterFluxOrEnd;
     bool _uiOwnsMousePress;
     bool _worldMousePressActive;
 
@@ -89,6 +90,7 @@ public class GunnerEditorInputAdapter : MonoBehaviour
         }
 
         TrackPressOwnership();
+        TryActivateEditorShield(gunner);
 
         if (_awaitingMouseReleaseAfterFluxOrEnd)
         {
@@ -142,6 +144,26 @@ public class GunnerEditorInputAdapter : MonoBehaviour
             _uiOwnsMousePress = false;
             _worldMousePressActive = false;
         }
+    }
+
+    void TryActivateEditorShield(PlayerId gunner)
+    {
+        if (_awaitingRightReleaseAfterFluxOrEnd)
+        {
+            if (!Input.GetMouseButton(1))
+            {
+                _awaitingRightReleaseAfterFluxOrEnd = false;
+            }
+
+            return;
+        }
+
+        if (!Input.GetMouseButtonDown(1) || IsInteractiveUiUnderMouse())
+        {
+            return;
+        }
+
+        _router.TryGunnerShield(gunner);
     }
 
     bool IsInteractiveUiUnderMouse()
@@ -205,6 +227,7 @@ public class GunnerEditorInputAdapter : MonoBehaviour
     void HandleFluxStarting()
     {
         _awaitingMouseReleaseAfterFluxOrEnd = true;
+        _awaitingRightReleaseAfterFluxOrEnd = true;
         _uiOwnsMousePress = false;
         _worldMousePressActive = false;
     }
@@ -212,6 +235,7 @@ public class GunnerEditorInputAdapter : MonoBehaviour
     void HandleRoundEnded(RoundEndReason reason)
     {
         _awaitingMouseReleaseAfterFluxOrEnd = true;
+        _awaitingRightReleaseAfterFluxOrEnd = true;
         _uiOwnsMousePress = false;
         _worldMousePressActive = false;
     }

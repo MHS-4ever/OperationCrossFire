@@ -273,7 +273,7 @@ public class PoolManager : MonoBehaviour
         {
             PlayerProjectile instance = Instantiate(_playerProjectilePrefab, _poolRoot);
             instance.name = $"{_playerProjectilePrefab.name}_{i}";
-            instance.Initialize(this);
+            instance.Initialize(this, _roundManager);
             instance.PrepareForPool();
             _playerProjectiles[i] = instance;
         }
